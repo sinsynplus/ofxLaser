@@ -5,6 +5,7 @@
 //  Created by Seb Lee-Delisle on 06/11/2017.
 //
 //
+
 #pragma once
 
 #include "ofxLaserDacBase.h"
@@ -16,11 +17,12 @@
 #include "PennerEasing.h"
 
 namespace ofxLaser {
-
+    
 	// a container than holds all the points for a shape
 	class ShapePoints : public vector<Point> {
 		
 		public:
+        
 		bool tested = false;
 		bool reversed = false;
 		bool reversable = true;
@@ -30,8 +32,9 @@ namespace ofxLaser {
 		Point& getEnd() {
 			return reversed?this->front() : this->back();
 		}
+        
 	};
-
+    
 	class Projector {
         
 		public :
@@ -46,8 +49,7 @@ namespace ofxLaser {
 		void update(bool updateZones);
 		void send(ofPixels* pixels = NULL, float masterIntensity = 1);
 		void getAllShapePoints(vector<ShapePoints>* allzoneshapepoints, ofPixels*pixels, float speedmultiplier);
-
-		
+        
         void sendRawPoints(const vector<Point>& points, int zonenum = 0, float masterIntensity =1);
         int getPointRate() {
             return pps; 
@@ -65,11 +67,11 @@ namespace ofxLaser {
 		void drawWarpUI(float x=0, float y=0, float w=800, float h=800);
 		void hideWarpGui();
 		void showWarpGui();
-
+        
 		void addPoint(ofxLaser::Point p);
 		void addPoint(ofPoint p, ofFloatColor c, float pointIntensity = 1, bool useCalibration = true);
 		void addPoints(vector<ofxLaser::Point>&points, bool reversed = false);
-
+        
 		void addPointsForMoveTo(const ofPoint & currentPosition, const ofPoint & targetpoint, vector<Point>& points);
 		void addPointsForMoveTo(const ofPoint & currentPosition, const ofPoint & targetpoint);
 		void processPoints(float masterIntensity, bool offsetColours = true);
@@ -85,8 +87,7 @@ namespace ofxLaser {
 		
 		deque<Shape*> getTestPatternShapesForZone(int zoneindex);
 		float calculateCalibratedBrightness(float value, float intensity, float level100, float level75, float level50, float level25, float level0);
-
-
+        
 		vector<Zone*> zones;
 		vector<ZoneTransform*> zoneTransforms;
 		vector<ofRectangle> zoneMasks;
@@ -101,7 +102,7 @@ namespace ofxLaser {
         vector<ofParameter<bool>> zonesMuted;
         vector<ofParameter<bool>> zonesSoloed;
         vector<bool> zonesEnabled;
-
+        
 		DacBase* dac;
 		
 		const int min = -32768;
@@ -138,14 +139,14 @@ namespace ofxLaser {
 		ofParameter<int> shapePreOn = 0;
 		ofParameter<int> shapePostOn = 0;
 		
-		ofParameter<bool> smoothHomePosition; 
-
+		ofParameter<bool> smoothHomePosition;
+        
 		ofParameter<bool> laserOnWhileMoving = false;
 		
 		ofParameter<glm::vec2> outputOffset;
 		
 		map<string, RenderProfile> renderProfiles;
-
+        
 		// would probably be sensible to move these settings out into a colour
 		// calibration object.
         
@@ -169,9 +170,10 @@ namespace ofxLaser {
 		
 		ofxPanel* gui;
         //bool guiIsVisible;
-		bool guiInitialised = false; 
-
+		bool guiInitialised = false;
+        
+        ofParameterGroup params;
+        
 	};
-
+    
 }
-
