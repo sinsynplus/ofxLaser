@@ -1,4 +1,4 @@
- //
+//
 //  ofxLaserManager.hpp
 //  ofxLaserRewrite
 //
@@ -7,6 +7,7 @@
 //
 
 #pragma once
+
 #ifndef OFXLASERMANAGER_H
 #define OFXLASERMANAGER_H
 
@@ -18,36 +19,30 @@
 #include "ofxLaserCircle.h"
 #include "ofxLaserProjector.h"
 #include "ofxLaserDacBase.h"
-#include "ofxGui.h"
 #include "ofxLaserMaskManager.h"
+#include "ofxGui.h"
 
 #define OFXLASER_PROFILE_FAST "FAST"
 #define OFXLASER_PROFILE_DEFAULT "DEFAULT"
 #define OFXLASER_PROFILE_DETAIL "DETAIL"
-
 
 enum ofxLaserZoneMode {
 	OFXLASER_ZONE_MANUAL, // all zones are separate, you manually specify which zone you want
 	OFXLASER_ZONE_AUTOMATIC, // non-overlapping zones assumed - shapes go in all zones that
 							// contain it
 	OFXLASER_ZONE_OPTIMISE // automatically puts it in the best zone
-	
-	//OFXLASER_ZONE_OVERLAY // doubles up multiple lasers for improved brightness - actually not required cos
-							// AUTOMATIC does the same thing
-	
-	
 };
 
 namespace ofxLaser {
-
+    
 	class Manager {
-
-		public :
-
+        
+		public:
+        
 		// it's a Singleton so shouldn't ever have more than one.
 		static Manager * instance();
 		static Manager * laserManager;
-
+        
 		Manager();
 		~Manager();
         
@@ -60,7 +55,7 @@ namespace ofxLaser {
 		
 		void nextProjector();
 		void previousProjector();
-
+        
 		void setup(int width, int height);
 		void update();
 		void drawUI(bool fullscreen = false);
@@ -69,14 +64,14 @@ namespace ofxLaser {
         void updateScreenSize(ofResizeEventArgs &e);
 		void updateScreenSize();
 		void updateGuiPositions();
-		void showAdvancedPressed(bool& state); 
-
+		void showAdvancedPressed(bool& state);
+        
         void send();
         void sendRawPoints(const std::vector<ofxLaser::Point>& points, int projectornum = 0, int zonenum = 0);
         
         int getProjectorPointRate(int projectornum = 0);
-        float getProjectorFrameRate(int projectornum); 
-
+        float getProjectorFrameRate(int projectornum);
+        
 		void armAllProjectorsListener();
 		void disarmAllProjectorsListener();
 		void armAllProjectors();
@@ -97,7 +92,7 @@ namespace ofxLaser {
 		bool toggleGui();
 		void setGuiVisible(bool visible);
 		bool isGuiVisible();
-
+        
 		void saveSettings();
 		
 		Zone& getZone(int zonenum);
@@ -107,15 +102,16 @@ namespace ofxLaser {
 		
 		// should be called before initGui
 		bool setGuideImage(string filename);
-		bool isProjectorArmed(int i); 
-	
+		bool isProjectorArmed(int i);
+        
 		int width, height;
-		int guiProjectorPanelWidth;
-		int dacStatusBoxSmallWidth;
+		ofParameter<int> guiProjectorPanelWidth;
+		ofParameter<int> dacStatusBoxSmallWidth;
 		int dacStatusBoxHeight; 
-		int guiSpacing; 
-		// converts openGL coords to screen coords //
-		
+		ofParameter<int> guiSpacing;
+        ofParameter<int> smallPreviewHeight;
+        
+		// converts openGL coords to screen coords
 		ofPoint gLProject(ofPoint p);
 		ofPoint gLProject( float ax, float ay, float az ) ;
 		
@@ -132,10 +128,8 @@ namespace ofxLaser {
         ofParameter<bool> showBitmapMask;
 		ofParameter<bool> laserMasks; 
 		
-		
-		ofParameter<float>masterIntensity; 
-		//ofParameter<bool>showGuide;
-		//ofParameter<int>guideBrightness;
+		ofParameter<float>masterIntensity;
+        
 		ofImage guideImage;
 		
         MaskManager laserMask;
@@ -146,18 +140,29 @@ namespace ofxLaser {
 		bool zonesChanged; 
 		std::vector<Zone*> zones;
 		
-		protected :
-		
-		ofxPanel gui;
-		ofParameterGroup params;
-		ofParameterGroup customParams;
+        ofxPanel gui;
+        ofParameterGroup params;
+        ofParameterGroup customParams;
+        
+        ofParameterGroup paramsLaser;
+        
+        ofParameter<bool> armAll;
+        ofParameter<bool> disarmAll;
+        void armAllChanged(bool & armAll);
+        void disarmAllChanged(bool & disarmAll);
+        
+        
+		protected:
+        
 		bool guiIsVisible;
 		ofxButton armAllButton;
 		ofxButton disarmAllButton;
 		bool doArmAll = false;
 		bool doDisarmAll = false;
 		
+        
 		private:
+        
 		int createDefaultZone();
 		
 		ofxLaserZoneMode zoneMode = OFXLASER_ZONE_AUTOMATIC;
@@ -166,12 +171,9 @@ namespace ofxLaser {
 		std::vector<Projector*> projectors;
 		
 		std::deque <ofxLaser::Shape*> shapes;
-		//ofParameter<int> testPattern;
-		
+        
 		ofPolyline tmpPoly; // to avoid generating polyline objects
 		int screenHeight;
-		
-		
 	};
 }
 
